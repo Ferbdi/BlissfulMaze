@@ -1,11 +1,13 @@
 using Zenject;
+using BlissfulMaze.Core;
 
 namespace BlissfulMaze.Infrastructure
 {
-    public class BootstrapInstaller : MonoInstaller
+    public class SceneInstaller : MonoInstaller
     {
         public override void InstallBindings()
         {
+
         }
     }
 }
