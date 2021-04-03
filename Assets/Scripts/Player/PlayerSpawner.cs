@@ -6,15 +6,17 @@ namespace BlissfulMaze.Entities
     public class PlayerSpawner : IInitializable
     {
         private readonly Player.Factory _playerFactory;
+        private readonly Vector3 _spawnPosition;
 
-        public PlayerSpawner(Player.Factory playerFactory)
+        public PlayerSpawner(Player.Factory playerFactory, Vector3 spawnPosition)
         {
             _playerFactory = playerFactory;
+            _spawnPosition = spawnPosition;
         }
 
         public void Initialize()
         {
-            _playerFactory.Create(new Vector3(0, 1, 0));
+            _playerFactory.Create(_spawnPosition);
         }
     }
 }

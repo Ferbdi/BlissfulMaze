@@ -7,7 +7,8 @@ namespace BlissfulMaze.Infrastructure
 {
     public class SceneInstaller : MonoInstaller
     {
-        public GameObject playerPrefab;
+        [SerializeField] private GameObject _playerPrefab;
+        [SerializeField] private Vector3 _spawnPosition;
 
         public override void InstallBindings()
         {
@@ -20,14 +21,15 @@ namespace BlissfulMaze.Infrastructure
         {
             Container
                 .BindFactory<Vector3, Player, Player.Factory>()
-                .FromComponentInNewPrefab(playerPrefab);
+                .FromComponentInNewPrefab(_playerPrefab);
         }
 
         private void BindPlayerSpawner()
         {
             Container
                 .BindInterfacesTo<PlayerSpawner>()
-                .AsSingle();
+                .AsSingle()
+                .WithArguments(_spawnPosition);
         }
 
         private void BindPlayerInputService()
