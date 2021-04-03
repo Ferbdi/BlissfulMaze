@@ -7,6 +7,8 @@ namespace BlissfulMaze.Common
 {
     public class Player : MonoBehaviour, IPlayer
     {
+        public LayerMask ObstacleMask;
+
         private float _tumblingDuration = 0.2f;
         private bool _isTumbling;
 
@@ -35,10 +37,20 @@ namespace BlissfulMaze.Common
             _playerInputService.OnLeft -= Tumble;
         }
 
+        public bool IsCanTumble(Vector3 direction)
+        {
+            var ray = new Ray(transform.position, direction);
+            Debug.DrawRay(ray.origin, ray.direction, Color.red, 1);
+            if (Physics.Raycast(ray, out var hitInfo, 1, ObstacleMask))
+                return false;
+            return true;
+        }
+
         public void Tumble(Vector3 direction)
         {
             if (_isTumbling) return;
-            StartCoroutine(TumbleRoutine(direction));
+            if (IsCanTumble(direction))
+                StartCoroutine(TumbleRoutine(direction));
         }
 
         private IEnumerator TumbleRoutine(Vector3 direction)
