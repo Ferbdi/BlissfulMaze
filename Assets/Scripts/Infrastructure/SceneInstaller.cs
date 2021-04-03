@@ -1,6 +1,6 @@
 using Zenject;
 using BlissfulMaze.Core;
-using BlissfulMaze.Entities;
+using BlissfulMaze.Common;
 using UnityEngine;
 
 namespace BlissfulMaze.Infrastructure

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
 
-namespace BlissfulMaze.Entities
+namespace BlissfulMaze.Common
 {
     public class Player : MonoBehaviour, IPlayer
     {

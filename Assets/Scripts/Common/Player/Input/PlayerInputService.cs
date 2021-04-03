@@ -2,7 +2,7 @@
 using UnityEngine;
 using Zenject;
 
-namespace BlissfulMaze.Entities
+namespace BlissfulMaze.Common
 {
     public class PlayerInputService : ITickable, IPlayerInputService
     {

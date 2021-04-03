@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace BlissfulMaze.Entities
+namespace BlissfulMaze.Common
 {
     public interface IPlayer
     {

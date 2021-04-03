@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using Zenject;
 
-namespace BlissfulMaze.Entities
+namespace BlissfulMaze.Common
 {
     public class PlayerSpawner : IInitializable
     {
