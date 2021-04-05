@@ -1,4 +1,4 @@
-﻿namespace BlissfulMaze.Common
+﻿namespace BlissfulMaze.Common.Maze
 {
     public enum TypeMazeCell
     {

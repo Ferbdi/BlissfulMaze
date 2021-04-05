@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace BlissfulMaze.Common
+namespace BlissfulMaze.Common.Maze
 {
     public class MazeInstantiator : IMazeInstantiator
     {

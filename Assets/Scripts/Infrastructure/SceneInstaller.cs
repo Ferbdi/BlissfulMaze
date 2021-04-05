@@ -1,5 +1,6 @@
 using Zenject;
 using BlissfulMaze.Common;
+using BlissfulMaze.Common.Maze;
 using UnityEngine;
 
 namespace BlissfulMaze.Infrastructure

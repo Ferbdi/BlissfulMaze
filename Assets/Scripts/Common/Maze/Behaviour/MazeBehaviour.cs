@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using Zenject;
 
-namespace BlissfulMaze.Common
+namespace BlissfulMaze.Common.Maze
 {
     public class MazeBehaviour : MonoBehaviour
     {
@@ -11,14 +11,14 @@ namespace BlissfulMaze.Common
         public int Width;
         public int Height;
 
-        private IMazeInstantiator _mazeInstantiator;
         private IMazeGenerator _mazeGenerator;
+        private IMazeInstantiator _mazeInstantiator;
 
         [Inject]
-        private void Construct(IMazeInstantiator mazeInstantiator, IMazeGenerator mazeGenerator)
+        private void Construct(IMazeGenerator mazeGenerator, IMazeInstantiator mazeInstantiator)
         {
-            _mazeInstantiator = mazeInstantiator;
             _mazeGenerator = mazeGenerator;
+            _mazeInstantiator = mazeInstantiator;
         }
 
         private void Awake()
