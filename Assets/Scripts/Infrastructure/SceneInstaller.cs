@@ -1,5 +1,4 @@
 using Zenject;
-using BlissfulMaze.Core;
 using BlissfulMaze.Common;
 using UnityEngine;
 
@@ -13,8 +12,18 @@ namespace BlissfulMaze.Infrastructure
         public override void InstallBindings()
         {
             BindPlayerInputService();
-            BindPlayerSpawner();
             BindPlayerFactory();
+            BindPlayerSpawner();
+
+            Container
+                .BindInterfacesTo<MazeGenerator>()
+                .AsSingle();
+            Container
+                .BindInterfacesTo<SimpleMazeGenerationAlgorithm>()
+                .AsSingle();
+            Container
+                .BindInterfacesTo<MazeInstantiator>()
+                .AsSingle();
         }
 
         private void BindPlayerFactory()
