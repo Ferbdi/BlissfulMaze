@@ -1,4 +1,5 @@
 using Zenject;
+using BlissfulMaze.Core;
 using BlissfulMaze.Common;
 using BlissfulMaze.Common.Maze;
 using UnityEngine;
@@ -7,23 +8,58 @@ namespace BlissfulMaze.Infrastructure
 {
     public class SceneInstaller : MonoInstaller
     {
+        [Header("Player")]
         [SerializeField] private GameObject _playerPrefab;
         [SerializeField] private Vector3 _spawnPosition;
+        [Header("Maze")]
+        [SerializeField] private MazeBehaviour _mazeBehaviour;
 
         public override void InstallBindings()
         {
             BindPlayerInputService();
             BindPlayerFactory();
-            BindPlayerSpawner();
+            BindPlayer();
 
+            BindMazeGenerator();
+            BindMazeGenerationAlgorithm();
+            BindMazeInstantiator();
+            BindMazeBehaviour();
+        }
+
+        private void BindMazeBehaviour()
+        {
             Container
-                .BindInterfacesTo<MazeGenerator>()
+                .Bind<MazeBehaviour>()
+                .FromInstance(_mazeBehaviour)
                 .AsSingle();
+        }
+
+        private void BindMazeInstantiator()
+        {
+            Container
+                .BindInterfacesTo<MazeInstantiator>()
+                .AsSingle();
+        }
+
+        private void BindMazeGenerationAlgorithm()
+        {
             Container
                 .BindInterfacesTo<SimpleMazeGenerationAlgorithm>()
                 .AsSingle();
+        }
+
+        private void BindMazeGenerator()
+        {
             Container
-                .BindInterfacesTo<MazeInstantiator>()
+                .BindInterfacesTo<MazeGenerator>()
+                .AsSingle();
+        }
+
+        private void BindPlayer()
+        {
+            Container
+                .Bind<Player>()
+                .FromMethod(() => Container.Resolve<Player.Factory>().Create(_spawnPosition))
                 .AsSingle();
         }
 
@@ -34,19 +70,10 @@ namespace BlissfulMaze.Infrastructure
                 .FromComponentInNewPrefab(_playerPrefab);
         }
 
-        private void BindPlayerSpawner()
-        {
-            Container
-                .BindInterfacesTo<PlayerSpawner>()
-                .AsSingle()
-                .WithArguments(_spawnPosition);
-        }
-
         private void BindPlayerInputService()
         {
             Container
-                .Bind(typeof(ITickable), typeof(IPlayerInputService))
-                .To<PlayerInputService>()
+                .BindInterfacesTo<PlayerInputService>()
                 .AsSingle();
         }
     }

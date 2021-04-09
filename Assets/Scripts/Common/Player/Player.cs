@@ -41,9 +41,7 @@ namespace BlissfulMaze.Common
         {
             var ray = new Ray(transform.position, direction);
             Debug.DrawRay(ray.origin, ray.direction, Color.red, 1);
-            if (Physics.Raycast(ray, out var hitInfo, 1, ObstacleMask))
-                return false;
-            return true;
+            return !Physics.Raycast(ray, 1, ObstacleMask);
         }
 
         public void Tumble(Vector3 direction)
