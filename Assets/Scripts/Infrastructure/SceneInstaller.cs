@@ -22,7 +22,7 @@ namespace BlissfulMaze.Infrastructure
 
             BindMazeGenerator();
             BindMazeGenerationAlgorithm();
-            BindMazeInstantiator();
+            BindMazePlacementService();
             BindMazeBehaviour();
         }
 
@@ -34,10 +34,10 @@ namespace BlissfulMaze.Infrastructure
                 .AsSingle();
         }
 
-        private void BindMazeInstantiator()
+        private void BindMazePlacementService()
         {
             Container
-                .BindInterfacesTo<MazeInstantiator>()
+                .BindInterfacesTo<MazePlacementService>()
                 .AsSingle();
         }
 
