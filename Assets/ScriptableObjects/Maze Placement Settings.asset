@@ -1,0 +1,50 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c1feddb47f5d246c680ccc2e26054add, type: 3}
+  m_Name: Maze Placement Settings
+  m_EditorClassIdentifier: 
+  _mazeCellPrefab: {fileID: 2344356764288867225, guid: 1dc8ca6e1c8604aadb27660d5eaca1b7, type: 3}
+  _mazeFinishTriggerPrefab: {fileID: 4793406548452801488, guid: 2438095af9a6d49b587993a024860bc6, type: 3}
+  _placementCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0.1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.23582077
+      value: 0.25077766
+      inSlope: -3.7533581
+      outSlope: -3.7533581
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.2507731
+      outWeight: 0.104921095
+    - serializedVersion: 3
+      time: 0.5
+      value: 0.5
+      inSlope: 2.2175364
+      outSlope: 2.2175364
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.21249998
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 0
+    m_RotationOrder: 4
+  _speedOfPlacementUp: 25
