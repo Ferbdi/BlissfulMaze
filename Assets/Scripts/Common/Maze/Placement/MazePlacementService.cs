@@ -1,49 +1,87 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Linq;
 
 namespace BlissfulMaze.Common.Maze
 {
+    public enum PlacementState
+    {
+        Down,
+        Up
+    }
+
     public class MazePlacementService : IMazePlacementService
     {
-        //void Instantiate();
-        //void ReInstantiate();
-        //void Up();
-        //void Down();
+        private bool _isMoving;
+        private PlacementState _placementState;
+        private List<Transform> cells = new List<Transform>();
+        private Transform _finishTriggerTransform;
+        private ITriggerHandler _finishTriggerHandler;
+ 
+        public bool IsMoving => _isMoving;
+        public PlacementState PlacementState => _placementState;
+        public ITriggerHandler FinishTrigger => _finishTriggerHandler;
 
-
-        public void InstantiateRoutine(MazeBehaviour mazeBehaviour, IMaze maze, MazePlacementSettings mazePlacementSettings, Transform container)
+        public void Instantiate(IMaze maze, MazePlacementSettings mazePlacementSettings, Transform container)
         {
-            var bufferCells = new List<GameObject>();
-
             for (int i = 0; i < maze.Height; i++)
             {
                 for (int j = 0; j < maze.Width; j++)
                 {
                     if (maze.Cells[i, j].HasFlag(TypeMazeCell.Wall))
-                        bufferCells.Add(GameObject.Instantiate(mazePlacementSettings.MazeCellPrefab, new Vector3(-(maze.Height / 2) + i, 0, -(maze.Width / 2) + j), Quaternion.identity, container));
+                        cells.Add(GameObject.Instantiate(mazePlacementSettings.MazeCellPrefab, new Vector3(-(maze.Height / 2) + i, 0, -(maze.Width / 2) + j), Quaternion.identity, container).transform);
                 }
             }
 
             var trigger = GameObject.Instantiate(mazePlacementSettings.MazeFinishTriggerPrefab, new Vector3(-(maze.Height / 2), 1, -(maze.Width / 2)), Quaternion.identity, container);
-            mazeBehaviour.FinishTrigger = trigger.GetComponent<TriggerHandler>();
-
-            int counter = 0;
-            foreach (var cell in bufferCells)
-            {
-                mazeBehaviour.StartCoroutine(CellUpRoutine(mazePlacementSettings, cell.transform, (counter + 1f) / (bufferCells.Count + 1f)));
-                counter++;
-            }
+            _finishTriggerHandler = trigger.GetComponent<TriggerHandler>();
         }
 
-        private IEnumerator CellUpRoutine(MazePlacementSettings mazePlacementSettings, Transform cell, float factor)
+        public void MoveUp(MazePlacementSettings mazePlacementSettings)
         {
-            yield return new WaitForSeconds(1f * factor);
-            var targetPosition = new Vector3(cell.position.x, 1, cell.position.z);
-            while (cell.position != targetPosition)
+            MoveCellsAsync(mazePlacementSettings, PlacementState.Up, 1);
+        }
+
+        public void MoveDown(MazePlacementSettings mazePlacementSettings)
+        {
+            MoveCellsAsync(mazePlacementSettings, PlacementState.Down, 0);
+        }
+
+        private async void MoveCellsAsync(MazePlacementSettings mazePlacementSettings, PlacementState state, float targetY)
+        {
+            if (_isMoving) return;
+            _placementState = state;
+            _isMoving = true;
+
+            int counter = 0;
+            var tasks = new List<Task>();
+            foreach (var cell in cells)
             {
-                cell.position = Vector3.Lerp(cell.position, targetPosition, Time.deltaTime * mazePlacementSettings.SpeedOfPlacementUp * mazePlacementSettings.PlacementCurve.Evaluate(factor));
-                yield return null;
+                var targetPosition = new Vector3(cell.transform.position.x, targetY, cell.transform.position.z);
+                var task = MoveCellAsync(cell.transform, mazePlacementSettings, targetPosition, (counter + 1f) / (cells.Count() + 1f));
+                tasks.Add(task);
+                counter++;
+            }
+
+            await Task.WhenAll(tasks);
+            _isMoving = false;
+        }
+
+        private async Task MoveCellAsync(Transform cell, MazePlacementSettings mazePlacementSettings, Vector3 targetPosition, float factor)
+        {
+            try
+            {
+                await Task.Delay((int)(1000f * factor));
+                while (cell.position != targetPosition)
+                {
+                    cell.position = Vector3.MoveTowards(cell.position, targetPosition, Time.deltaTime * mazePlacementSettings.SpeedOfPlacementUp * mazePlacementSettings.PlacementCurve.Evaluate(factor));
+                    await Task.Yield();
+                }
+            }
+            catch
+            {
+                Debug.LogWarning("[WARNING] Cell is missing. Maybe scene is reloaded.");
             }
         }
     }
