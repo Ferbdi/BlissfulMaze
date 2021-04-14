@@ -9,7 +9,7 @@ namespace BlissfulMaze.Common
     {
         public LayerMask ObstacleMask;
 
-        private float _tumblingDuration = 0.2f;
+        [SerializeField] private float _tumblingDuration = 0.2f;
         private bool _isTumbling;
 
         private IPlayerInputService _playerInputService;

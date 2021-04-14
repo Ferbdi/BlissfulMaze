@@ -134,6 +134,7 @@ GameObject:
   - component: {fileID: 64210402}
   - component: {fileID: 64210401}
   - component: {fileID: 64210403}
+  - component: {fileID: 64210404}
   m_Layer: 0
   m_Name: SceneContext
   m_TagString: Untagged
@@ -200,7 +201,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _playerPrefab: {fileID: 5903806546439277203, guid: e28640bb8669a490884fce3414f39daa, type: 3}
-  _spawnPosition: {x: 0, y: 1, z: 0}
+  _spawnPosition: {x: 1, y: 1, z: 0}
+  _mazeBehaviour: {fileID: 1174022229}
+--- !u!114 &64210404
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 64210400}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f4436a7a2bc0451097ccdcdd12792e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1174022228
 GameObject:
   m_ObjectHideFlags: 0
@@ -230,9 +244,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2388dfd1e41be497e8584f714d203043, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MazeCellPrefab: {fileID: 2344356764288867225, guid: 1dc8ca6e1c8604aadb27660d5eaca1b7, type: 3}
-  Width: 11
-  Height: 11
+  _mazePlacementSettings: {fileID: 11400000, guid: e7dc08de945d04d95a7abae73d404500, type: 2}
+  _width: 21
+  _height: 21
 --- !u!4 &1174022230
 Transform:
   m_ObjectHideFlags: 0
@@ -337,7 +351,7 @@ Transform:
   m_GameObject: {fileID: 1177727845}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 11, y: 1, z: 11}
+  m_LocalScale: {x: 21, y: 1, z: 21}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 3
@@ -488,7 +502,7 @@ Camera:
   far clip plane: 100
   field of view: 60
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 10
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -512,7 +526,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1840946115}
   m_LocalRotation: {x: 0.19996412, y: -0.3736123, z: 0.08282785, w: 0.90198}
-  m_LocalPosition: {x: 10, y: 8, z: -10}
+  m_LocalPosition: {x: 10, y: 10, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
