@@ -10,6 +10,7 @@ namespace BlissfulMaze.Common
         public event Action<Vector3> OnRight;
         public event Action<Vector3> OnDown;
         public event Action<Vector3> OnUp;
+        public bool IsEnabled { get; set; } = true;
 
         private void InputCheck()
         {
@@ -25,7 +26,8 @@ namespace BlissfulMaze.Common
 
         public void Tick()
         {
-            InputCheck();
+            if (IsEnabled)
+                InputCheck();
         }
     }
 }

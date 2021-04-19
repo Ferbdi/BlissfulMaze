@@ -9,5 +9,6 @@ namespace BlissfulMaze.Common
         event Action<Vector3> OnRight;
         event Action<Vector3> OnDown;
         event Action<Vector3> OnUp;
+        bool IsEnabled { get; set; }
     }
 }
