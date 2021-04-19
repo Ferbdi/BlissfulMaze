@@ -1,4 +1,6 @@
-﻿namespace BlissfulMaze.Common.Maze
+﻿using Vector2Int = UnityEngine.Vector2Int;
+
+namespace BlissfulMaze.Common.Maze
 {
     public class MazeGenerator : IMazeGenerator
     {
@@ -14,9 +16,9 @@
             _algorithm = algorithm;
         }
 
-        public IMaze Generate(int width, int height)
+        public IMaze Generate(int width, int height, Vector2Int finishPosition)
         {
-            return _algorithm.Create(width, height);
+            return _algorithm.Create(width, height, finishPosition);
         }
     }
 }

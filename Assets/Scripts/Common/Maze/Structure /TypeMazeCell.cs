@@ -3,6 +3,7 @@
     public enum TypeMazeCell
     {
         Empty,
-        Wall
+        Wall,
+        Finish
     }
 }

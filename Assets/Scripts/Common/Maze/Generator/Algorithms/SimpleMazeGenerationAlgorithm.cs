@@ -50,11 +50,11 @@ namespace BlissfulMaze.Common.Maze
             visitedCells[(int)second.x, (int)second.y] = true; //делаем клетку посещенной
         }
 
-        public void CreateMaze(IMaze maze)
+        public void CreateMaze(IMaze maze, Vector2Int finishPosition)
         {
             bool[,] visitedCells = new bool[maze.Height, maze.Width];
             Stack<Vector2> _path = new Stack<Vector2>();
-            _path.Push(new Vector2(1, 1));
+            _path.Push(finishPosition);
 
             while (_path.Count != 0) //пока в стеке есть клетки ищем соседей и строим путь
             {
@@ -73,7 +73,7 @@ namespace BlissfulMaze.Common.Maze
             }
         }
 
-        public IMaze Create(int width, int height)
+        public IMaze Create(int width, int height, Vector2Int finishPosition)
         {
             var maze = new Maze();
             maze.Cells = new TypeMazeCell[height, width];
@@ -94,7 +94,8 @@ namespace BlissfulMaze.Common.Maze
                 }
             }
 
-            CreateMaze(maze);
+            CreateMaze(maze, finishPosition);
+            maze.Cells[finishPosition.y, finishPosition.x] = TypeMazeCell.Finish;
 
             return maze;
         }
