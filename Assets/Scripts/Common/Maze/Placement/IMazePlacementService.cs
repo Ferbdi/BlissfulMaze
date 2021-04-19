@@ -9,8 +9,8 @@ namespace BlissfulMaze.Common.Maze
         PlacementState PlacementState { get; }
         ITriggerHandler FinishTrigger { get; }
 
-        void Instantiate(IMaze maze, MazePlacementSettings mazePlacementSettings, Transform container);
-        void MoveUp(MazePlacementSettings mazePlacementSettings);
-        void MoveDown(MazePlacementSettings mazePlacementSettings);
+        void Setup(IMaze maze, MazePlacementSettings mazePlacementSettings, Transform container);
+        void MoveUp();
+        void MoveDown();
     }
 }

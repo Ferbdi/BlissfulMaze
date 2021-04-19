@@ -15,37 +15,79 @@ namespace BlissfulMaze.Common.Maze
     {
         private bool _isMoving;
         private PlacementState _placementState;
-        private List<Transform> cells = new List<Transform>();
-        private Transform _finishTriggerTransform;
-        private ITriggerHandler _finishTriggerHandler;
- 
+
+        private List<Transform> _cells = new List<Transform>();
+        private MazePlacementFinish _mazePlacementFinish;
+
+        private MazePlacementSettings _mazePlacementSettings;
+        private MazePlacementCell.Pool _mazePlacementCellPool;
+        private MazePlacementFinish.Pool _mazePlacementFinishPool;
+
+
         public bool IsMoving => _isMoving;
         public PlacementState PlacementState => _placementState;
-        public ITriggerHandler FinishTrigger => _finishTriggerHandler;
+        public ITriggerHandler FinishTrigger => _mazePlacementFinish?.GetComponent<TriggerHandler>();
 
-        public void Instantiate(IMaze maze, MazePlacementSettings mazePlacementSettings, Transform container)
+        public MazePlacementService(MazePlacementCell.Pool mazePlacementCellPool, MazePlacementFinish.Pool mazePlacementFinishPool)
         {
+            _mazePlacementCellPool = mazePlacementCellPool;
+            _mazePlacementFinishPool = mazePlacementFinishPool;
+        }
+
+        public void Setup(IMaze maze, MazePlacementSettings mazePlacementSettings, Transform container)
+        {
+            _mazePlacementSettings = mazePlacementSettings;
+
+            CreateCellsFromPoolFor(maze);
+        }
+
+        private void CreateFinishFromPool(Vector3 position)
+        {
+            DespawnMazePlacementFinish();
+            _mazePlacementFinish = _mazePlacementFinishPool
+                            .Spawn(position);
+        }
+
+        private void DespawnMazePlacementFinish()
+        {
+            if (_mazePlacementFinish == null) return;
+            _mazePlacementFinishPool.Despawn(_mazePlacementFinish);
+            _mazePlacementFinish = null;
+        }
+
+        private void CreateCellsFromPoolFor(IMaze maze)
+        {
+            _cells.ForEach(c => _mazePlacementCellPool.Despawn(c.GetComponent<MazePlacementCell>()));
+            _cells.Clear();
             for (int i = 0; i < maze.Height; i++)
             {
                 for (int j = 0; j < maze.Width; j++)
                 {
                     if (maze.Cells[i, j].HasFlag(TypeMazeCell.Wall))
-                        cells.Add(GameObject.Instantiate(mazePlacementSettings.MazeCellPrefab, new Vector3(-(maze.Height / 2) + i, 0, -(maze.Width / 2) + j), Quaternion.identity, container).transform);
+                    {
+                        var cell = _mazePlacementCellPool
+                            .Spawn(new Vector3(-(maze.Height / 2) + i, 0, -(maze.Width / 2) + j));
+                        _cells.Add(cell.transform);
+                    }
+                    else if (maze.Cells[i, j].HasFlag(TypeMazeCell.Finish))
+                    {
+                        CreateFinishFromPool(new Vector3(-(maze.Width / 2) + i, 1, -(maze.Height / 2) + j));
+                    }
                 }
             }
-
-            var trigger = GameObject.Instantiate(mazePlacementSettings.MazeFinishTriggerPrefab, new Vector3(-(maze.Height / 2), 1, -(maze.Width / 2)), Quaternion.identity, container);
-            _finishTriggerHandler = trigger.GetComponent<TriggerHandler>();
         }
 
-        public void MoveUp(MazePlacementSettings mazePlacementSettings)
+        public bool IsCanToSetup() { return PlacementState == PlacementState.Down && !IsMoving; }
+
+        public void MoveUp()
         {
-            MoveCellsAsync(mazePlacementSettings, PlacementState.Up, 1);
+            MoveCellsAsync(_mazePlacementSettings, PlacementState.Up, 1);
         }
 
-        public void MoveDown(MazePlacementSettings mazePlacementSettings)
+        public void MoveDown()
         {
-            MoveCellsAsync(mazePlacementSettings, PlacementState.Down, 0);
+            DespawnMazePlacementFinish();
+            MoveCellsAsync(_mazePlacementSettings, PlacementState.Down, 0);
         }
 
         private async void MoveCellsAsync(MazePlacementSettings mazePlacementSettings, PlacementState state, float targetY)
@@ -56,10 +98,10 @@ namespace BlissfulMaze.Common.Maze
 
             int counter = 0;
             var tasks = new List<Task>();
-            foreach (var cell in cells)
+            foreach (var cell in _cells)
             {
                 var targetPosition = new Vector3(cell.transform.position.x, targetY, cell.transform.position.z);
-                var task = MoveCellAsync(cell.transform, mazePlacementSettings, targetPosition, (counter + 1f) / (cells.Count() + 1f));
+                var task = MoveCellAsync(cell.transform, mazePlacementSettings, targetPosition, (counter + 1f) / (_cells.Count() + 1f));
                 tasks.Add(task);
                 counter++;
             }
