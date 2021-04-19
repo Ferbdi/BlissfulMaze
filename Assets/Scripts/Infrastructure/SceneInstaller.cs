@@ -1,8 +1,8 @@
 using Zenject;
 using BlissfulMaze.Core;
 using BlissfulMaze.Common;
-using BlissfulMaze.Common.Maze;
 using UnityEngine;
+using BlissfulMaze.Common.Maze;
 
 namespace BlissfulMaze.Infrastructure
 {
@@ -20,40 +20,11 @@ namespace BlissfulMaze.Infrastructure
             BindPlayerFactory();
             BindPlayer();
 
-            BindMazeGenerator();
-            BindMazeGenerationAlgorithm();
-            BindMazePlacementService();
-            BindMazeBehaviour();
-        }
-
-        private void BindMazeBehaviour()
-        {
             Container
-                .Bind<MazeBehaviour>()
-                .FromInstance(_mazeBehaviour)
-                .AsSingle();
-        }
-
-        private void BindMazePlacementService()
-        {
-            Container
-                .BindInterfacesTo<MazePlacementService>()
-                .AsSingle();
-        }
-
-        private void BindMazeGenerationAlgorithm()
-        {
-            Container
-                .BindInterfacesTo<SimpleMazeGenerationAlgorithm>()
-                .AsSingle();
-        }
-
-        private void BindMazeGenerator()
-        {
-            Container
-                .BindInterfacesTo<MazeGenerator>()
-                .AsSingle();
-        }
+               .Bind<MazeBehaviour>()
+               .FromInstance(_mazeBehaviour)
+               .AsSingle();
+        } 
 
         private void BindPlayer()
         {
