@@ -8,11 +8,11 @@ namespace BlissfulMaze.Common.Maze
         [SerializeField] private GameObject _mazeCellPrefab;
         [SerializeField] private GameObject _mazeFinishTriggerPrefab;
         [SerializeField] private AnimationCurve _placementCurve;
-        [SerializeField] private float _speedOfPlacementUp;
+        [SerializeField] private float _moveSpeed;
 
         public GameObject MazeCellPrefab => _mazeCellPrefab;
         public GameObject MazeFinishTriggerPrefab => _mazeFinishTriggerPrefab;
         public AnimationCurve PlacementCurve => _placementCurve;
-        public float SpeedOfPlacementUp => _speedOfPlacementUp;
+        public float MoveSpeed => _moveSpeed;
     }
 }

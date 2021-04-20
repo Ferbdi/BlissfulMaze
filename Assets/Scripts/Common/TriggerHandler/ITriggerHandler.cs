@@ -5,9 +5,9 @@ namespace BlissfulMaze.Common
 {
     public interface ITriggerHandler
     {
-        event Action<Collider> Enter;
-        event Action<Collider> Stay;
-        event Action<Collider> Exit;
+        event Action<Collider> OnEnter;
+        event Action<Collider> OnStay;
+        event Action<Collider> OnExit;
         bool HasInside(GameObject go);
     }
 }

@@ -1,8 +1,7 @@
 using Zenject;
-using BlissfulMaze.Core;
-using BlissfulMaze.Common;
 using UnityEngine;
 using BlissfulMaze.Common.Maze;
+using BlissfulMaze.Common.Player;
 
 namespace BlissfulMaze.Infrastructure
 {
@@ -16,22 +15,35 @@ namespace BlissfulMaze.Infrastructure
 
         public override void InstallBindings()
         {
+            BingGameLogicService();
+            BindMazeBehaviour();
             BindPlayerInputService();
             BindPlayerFactory();
             BindPlayer();
+        }
 
+        private void BindMazeBehaviour()
+        {
             Container
-               .Bind<MazeBehaviour>()
-               .FromInstance(_mazeBehaviour)
-               .AsSingle();
-        } 
+                .Bind<MazeBehaviour>()
+                .FromInstance(_mazeBehaviour)
+                .AsSingle();
+        }
+
+        private void BingGameLogicService()
+        {
+            Container
+                .BindInterfacesTo<GameLogicService>()
+                .AsSingle();
+        }
 
         private void BindPlayer()
         {
             Container
                 .Bind<Player>()
                 .FromMethod(() => Container.Resolve<Player.Factory>().Create(_spawnPosition))
-                .AsSingle();
+                .AsSingle()
+                .NonLazy();
         }
 
         private void BindPlayerFactory()
