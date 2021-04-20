@@ -12,12 +12,13 @@ namespace BlissfulMaze.Common.Maze
         [SerializeField] private int _width;
         [SerializeField] private int _height;
 
-        public MazePlacementSettings MazePlacementSettings { get => _mazePlacementSettings; }
-        public ITriggerHandler FinishTrigger { get => _mazePlacementService.FinishTrigger; }
         private IMazeGenerator _mazeGenerator;
         private IMazePlacementService _mazePlacementService;
         private bool _isRecreating;
         private bool _finishInStartPosition;
+
+        public MazePlacementSettings MazePlacementSettings => _mazePlacementSettings;
+        public ITriggerHandler FinishTrigger => _mazePlacementService.FinishTrigger;
 
         [Inject]
         private void Construct(IMazeGenerator mazeGenerator, IMazePlacementService mazePlacementService)
@@ -34,9 +35,17 @@ namespace BlissfulMaze.Common.Maze
 
         private void Setup()
         {
-            var maze = _mazeGenerator.Generate(_width, _height, _finishInStartPosition ? new Vector2Int(1, 1) : new Vector2Int(_width - 2, _height - 2));
+            var finishPosition = _finishInStartPosition ? new Vector2Int(1, 1) : new Vector2Int(_width - 2, _height - 2);
             _finishInStartPosition = !_finishInStartPosition;
+
+            var maze = _mazeGenerator.Generate(_width, _height, finishPosition);
             _mazePlacementService.Setup(maze, _mazePlacementSettings, transform);
+        }
+
+        private async Task WaitForItMoving(IMazePlacementService mazePlacementService)
+        {
+            while (mazePlacementService.IsMoving)
+                await Task.Yield();
         }
 
         public async Task Recreate()
@@ -44,12 +53,12 @@ namespace BlissfulMaze.Common.Maze
             if (_isRecreating) return;
             _isRecreating = true;
 
-            while (_mazePlacementService.IsMoving) { await Task.Yield(); }
+            await WaitForItMoving(_mazePlacementService);
             _mazePlacementService.MoveDown();
-            while (_mazePlacementService.IsMoving) { await Task.Yield(); }
+            await WaitForItMoving(_mazePlacementService);
             Setup();
             _mazePlacementService.MoveUp();
-            while (_mazePlacementService.IsMoving) { await Task.Yield(); }
+            await WaitForItMoving(_mazePlacementService);
 
             _isRecreating = false;
         }

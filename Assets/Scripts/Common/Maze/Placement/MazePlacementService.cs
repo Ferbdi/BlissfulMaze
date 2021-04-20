@@ -23,7 +23,6 @@ namespace BlissfulMaze.Common.Maze
         private MazePlacementCell.Pool _mazePlacementCellPool;
         private MazePlacementFinish.Pool _mazePlacementFinishPool;
 
-
         public bool IsMoving => _isMoving;
         public PlacementState PlacementState => _placementState;
         public ITriggerHandler FinishTrigger => _mazePlacementFinish?.GetComponent<TriggerHandler>();
@@ -37,15 +36,13 @@ namespace BlissfulMaze.Common.Maze
         public void Setup(IMaze maze, MazePlacementSettings mazePlacementSettings, Transform container)
         {
             _mazePlacementSettings = mazePlacementSettings;
-
             CreateCellsFromPoolFor(maze);
         }
 
         private void CreateFinishFromPool(Vector3 position)
         {
             DespawnMazePlacementFinish();
-            _mazePlacementFinish = _mazePlacementFinishPool
-                            .Spawn(position);
+            _mazePlacementFinish = _mazePlacementFinishPool.Spawn(position);
         }
 
         private void DespawnMazePlacementFinish()
@@ -77,8 +74,6 @@ namespace BlissfulMaze.Common.Maze
             }
         }
 
-        public bool IsCanToSetup() { return PlacementState == PlacementState.Down && !IsMoving; }
-
         public void MoveUp()
         {
             MoveCellsAsync(_mazePlacementSettings, PlacementState.Up, 1);
@@ -101,7 +96,8 @@ namespace BlissfulMaze.Common.Maze
             foreach (var cell in _cells)
             {
                 var targetPosition = new Vector3(cell.transform.position.x, targetY, cell.transform.position.z);
-                var task = MoveCellAsync(cell.transform, mazePlacementSettings, targetPosition, (counter + 1f) / (_cells.Count() + 1f));
+                var factor = (counter + 1f) / (_cells.Count() + 1f);
+                var task = MoveCellAsync(cell.transform, mazePlacementSettings, targetPosition, factor);
                 tasks.Add(task);
                 counter++;
             }
@@ -117,7 +113,7 @@ namespace BlissfulMaze.Common.Maze
                 await Task.Delay((int)(1000f * factor));
                 while (cell.position != targetPosition)
                 {
-                    cell.position = Vector3.MoveTowards(cell.position, targetPosition, Time.deltaTime * mazePlacementSettings.SpeedOfPlacementUp * mazePlacementSettings.PlacementCurve.Evaluate(factor));
+                    cell.position = Vector3.MoveTowards(cell.position, targetPosition, Time.deltaTime * mazePlacementSettings.MoveSpeed * mazePlacementSettings.PlacementCurve.Evaluate(factor));
                     await Task.Yield();
                 }
             }

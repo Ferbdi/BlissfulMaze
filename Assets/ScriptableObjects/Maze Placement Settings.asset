@@ -47,4 +47,4 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 0
     m_RotationOrder: 4
-  _speedOfPlacementUp: 25
+  _moveSpeed: 25
