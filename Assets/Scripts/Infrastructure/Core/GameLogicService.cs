@@ -1,12 +1,11 @@
 ﻿using UnityEngine;
 using Zenject;
-using BlissfulMaze.Common;
+using BlissfulMaze.Common.Player;
 using BlissfulMaze.Common.Maze;
-using UnityEngine.SceneManagement;
 
-namespace BlissfulMaze.Core
+namespace BlissfulMaze.Infrastructure
 {
-    public class GameManager : MonoBehaviour, IGameManager
+    public class GameLogicService : IInitializable, IGameLogicService
     {
         private Player _player;
         private IPlayerInputService _playerInputService;
@@ -20,9 +19,9 @@ namespace BlissfulMaze.Core
             _mazeBehaviour = mazeBehaviour;
         }
 
-        private void Start()
+        public void Initialize()
         {
-            _mazeBehaviour.FinishTrigger.Enter += OnFinishTriggerEnter;
+            _mazeBehaviour.FinishTrigger.OnEnter += OnFinishTriggerEnter;
         }
 
         private async void OnFinishTriggerEnter(Collider collider)
@@ -31,7 +30,6 @@ namespace BlissfulMaze.Core
             {
                 if (collider.gameObject == _player.gameObject)
                 {
-                    Debug.Log("Finish!!!");
                     _playerInputService.IsEnabled = false;
                     await _mazeBehaviour.Recreate();
                     _playerInputService.IsEnabled = true;
@@ -41,12 +39,6 @@ namespace BlissfulMaze.Core
             {
                 Debug.LogWarning("[WARNING] MazeBehaviour is missing. Maybe scene is reloaded.");
             }
-        }
-
-        private void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.R))
-                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
     }
 }
