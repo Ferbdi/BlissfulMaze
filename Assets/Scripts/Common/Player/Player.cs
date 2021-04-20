@@ -1,17 +1,16 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
 
-namespace BlissfulMaze.Common
+namespace BlissfulMaze.Common.Player
 {
     public class Player : MonoBehaviour, IPlayer
     {
         [SerializeField] private LayerMask _obstacleMask;
         [SerializeField] private float _tumblingDuration = 0.2f;
-        private bool _isTumbling;
 
         private IPlayerInputService _playerInputService;
+        private bool _isTumbling;
 
         [Inject]
         private void Construct(IPlayerInputService playerInputService, Vector3 spawnPosition)
